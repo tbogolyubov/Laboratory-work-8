@@ -1,0 +1,215 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int n;
+	cout << "Введите количество сотрудников компании: ";
+	cin >> n;
+
+	vector<pair<int, int>> distances(n);
+	vector<pair<int, int>> costs(n);
+	vector<int> original_order(n); // Вектор, служащий для сохранения изначального порядка тарифов
+
+	cout << "Введите расстояния в километрах от работы до домов сотрудников:\n";
+
+	for (int i = 0; i < n; ++i) {
+		cout << "Расстояние до дома " << i + 1 << "-го сотрудника: ";
+		cin >> distances[i].first;
+		distances[i].second = i;
+	}
+
+	cout << "Введите тарифы в рублях за проезд одного километра в такси:\n";
+
+	for (int i = 0; i < n; ++i) {
+		cout << "Тариф для такси " << i + 1 << "-й машины: ";
+		cin >> costs[i].first;
+		costs[i].second = i;
+		original_order[i] = i; 
+	}
+
+	sort(distances.begin(), distances.end());
+	sort(original_order.begin(), original_order.end(), [&costs](int a, int b) {
+		return costs[a].first > costs[b].first;
+	}); // Сортируем порядок тарифов по убыванию
+
+	vector<int> answers(n);
+	int costs_sum = 0;
+	for (int i = 0; i < n; ++i) {
+		answers[distances[i].second] = original_order[i];
+		costs_sum += distances[i].first * costs[original_order[i]].first;
+	}
+
+	cout << "Оптимальная рассадка сотрудников по такси:\n";
+	for (int answer : answers) {
+		cout << answer + 1 << ' ';
+	}
+
+	cout << "\nСумма, которую необходимо заплатить: " << costs_sum;
+
+	if (costs_sum % 10 == 1 && costs_sum % 100 != 11) {
+		cout << " рубль (";
+	}
+	else if ((costs_sum % 10 >= 2 && costs_sum % 10 <= 4) && (costs_sum % 100 < 10 || costs_sum % 100 >= 20)) {
+		cout << " рубля (";
+	}
+	else {
+		cout << " рублей (";
+	}
+
+	int thousands = costs_sum / 1000;
+
+	if (thousands > 0 && thousands <= 100) {
+
+		if (costs_sum >= 100000) {
+			cout << "сто ";
+			thousands -= 100;
+		}
+		else if (costs_sum >= 90000) {
+			cout << "девяносто ";
+			thousands -= 90;
+		}
+		else if (costs_sum >= 80000) {
+			cout << "восемьдесят ";
+			thousands -= 80;
+		}
+		else if (costs_sum >= 70000) {
+			cout << "семьдесят ";
+			thousands -= 70;
+		}
+		else if (costs_sum >= 60000) {
+			cout << "шестьдесят ";
+			thousands -= 60;
+		}
+		else if (costs_sum >= 50000) {
+			cout << "пятьдесят ";
+			thousands -= 50;
+		}
+		else if (costs_sum >= 40000) {
+			cout << "сорок ";
+			thousands -= 40;
+		}
+		else if (costs_sum >= 30000) {
+			cout << "тридцать ";
+			thousands -= 30;
+		}
+		else if (costs_sum >= 20000) {
+			cout << "двадцать ";
+			thousands -= 20;
+		}
+
+		if (thousands > 0 && thousands <= 19) {
+			if (thousands == 1) cout << "одна тысяча ";
+			else if (thousands == 2) cout << "две тысячи ";
+			else if (thousands == 3) cout << "три тысячи ";
+			else if (thousands == 4) cout << "четыре тысячи ";
+			else if (thousands == 5) cout << "пять тысяч ";
+			else if (thousands == 6) cout << "шесть тысяч ";
+			else if (thousands == 7) cout << "семь тысяч ";
+			else if (thousands == 8) cout << "восемь тысяч ";
+			else if (thousands == 9) cout << "девять тысяч ";
+			else if (thousands == 10) cout << "десять тысяч ";
+			else if (thousands == 11) cout << "одиннадцать тысяч ";
+			else if (thousands == 12) cout << "двенадцать тысяч ";
+			else if (thousands == 13) cout << "тринадцать тысяч ";
+			else if (thousands == 14) cout << "четырнадцать тысяч ";
+			else if (thousands == 15) cout << "пятнадцать тысяч ";
+			else if (thousands == 16) cout << "шестнадцать тысяч ";
+			else if (thousands == 17) cout << "семнадцать тысяч ";
+			else if (thousands == 18) cout << "восемнадцать тысяч ";
+			else if (thousands == 19) cout << "девятнадцать тысяч ";
+		}
+		else if (thousands % 10 == 0) {
+			cout << "тысяч ";
+		}
+	}
+
+	if ((costs_sum / 100) % 10 == 1)
+		cout << "сто ";
+	else if ((costs_sum / 100) % 10 == 2)
+		cout << "двести ";
+	else if ((costs_sum / 100) % 10 == 3)
+		cout << "триста ";
+	else if ((costs_sum / 100) % 10 == 4)
+		cout << "четыреста ";
+	else if ((costs_sum / 100) % 10 == 5)
+		cout << "пятьсот ";
+	else if ((costs_sum / 100) % 10 == 6)
+		cout << "шестьсот ";
+	else if ((costs_sum / 100) % 10 == 7)
+		cout << "семьсот ";
+	else if ((costs_sum / 100) % 10 == 8)
+		cout << "восемьсот ";
+	else if ((costs_sum / 100) % 10 == 9)
+		cout << "девятьсот ";
+
+	if ((costs_sum / 10) % 10 == 1)
+	{
+		if (costs_sum % 10 == 0)
+			cout << "десять рублей";
+		else if (costs_sum % 10 == 1)
+			cout << "одинадцать рублей";
+		else if (costs_sum % 10 == 2)
+			cout << "двенадцать рублей";
+		else if (costs_sum % 10 == 3)
+			cout << "тринадцать рублей";
+		else if (costs_sum % 10 == 4)
+			cout << "четырнадцать рублей";
+		else if (costs_sum % 10 == 5)
+			cout << "пятнадцать рублей";
+		else if (costs_sum % 10 == 6)
+			cout << "шестнадцать рублей";
+		else if (costs_sum % 10 == 7)
+			cout << "семнадцать рублей";
+		else if (costs_sum % 10 == 8)
+			cout << "восемнадцать рублей";
+		else if (costs_sum % 10 == 9)
+			cout << "девятнадцать рублей";
+	}
+
+	if ((costs_sum / 10) % 10 == 2)
+		cout << "двадцать ";
+	else if ((costs_sum / 10) % 10 == 3)
+		cout << "тридцать ";
+	else if ((costs_sum / 10) % 10 == 4)
+		cout << "сорок ";
+	else if ((costs_sum / 10) % 10 == 5)
+		cout << "пятьдесят ";
+	else if ((costs_sum / 10) % 10 == 6)
+		cout << "шестьдесят ";
+	else if ((costs_sum / 10) % 10 == 7)
+		cout << "семьдесят ";
+	else if ((costs_sum / 10) % 10 == 8)
+		cout << "восемьдесят ";
+	else if ((costs_sum / 10) % 10 == 9)
+		cout << "девяносто ";
+
+	if ((costs_sum / 10) % 10 != 1)
+	{
+		if (costs_sum % 10 == 0)
+			cout << "рублей";
+		else if (costs_sum % 10 == 1)
+			cout << "один рубль";
+		else if (costs_sum % 10 == 2)
+			cout << "два рубля";
+		else if (costs_sum % 10 == 3)
+			cout << "три рубля";
+		else if (costs_sum % 10 == 4)
+			cout << "четыре рубля";
+		else if (costs_sum % 10 == 5)
+			cout << "пять рублей";
+		else if (costs_sum % 10 == 6)
+			cout << "шесть рублей";
+		else if (costs_sum % 10 == 7)
+			cout << "семь рублей";
+		else if (costs_sum % 10 == 8)
+			cout << "восемь рублей";
+		else
+			cout << "девять рублей";
+	}
+	cout << ")";
+
+	return 0;
+}
